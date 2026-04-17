@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will you be my Valentine?</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.container {
+  text-align: center;
+  background: rgba(255,255,255,0.95);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+h1 {
+  color: #e91e63;
+}
+
+.cat {
+  width: 180px;
+  transition: 0.3s;
+}
+
+button {
+  padding: 15px 35px;
+  margin: 10px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: 0.3s;
+}
+
+#yesBtn {
+  background: #4caf50;
+  color: white;
+  box-shadow: 0 0 15px #4caf50;
+}
+
+#noBtn {
+  background: #f44336;
+  color: white;
+}
+
+/* Floating hearts */
+.heart {
+  position: absolute;
+  font-size: 20px;
+  animation: float 6s linear infinite;
+}
+@keyframes float {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-10vh); }
+}
+
+/* Shake effect */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+.shake {
+  animation: shake 0.3s;
+}
+
+/* Typing text */
+#typing {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  color: #555;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-love.mp3">
+</audio>
+
+<div class="container">
+  <h1>Will you be my Valentine? ❤️</h1>
+
+  <img id="catImg" class="cat"
+    src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif">
+
+  <div id="typing"></div>
+
+  <div>
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 😢</button>
+  </div>
+
+  <button onclick="share()">Share 💌</button>
+</div>
+
+<script>
+const noBtn = document.getElementById('noBtn');
+const yesBtn = document.getElementById('yesBtn');
+const catImg = document.getElementById('catImg');
+const music = document.getElementById('music');
+
+// autoplay music
+document.body.onclick = () => music.play();
+
+// typing message
+const msg = "I really like you... and this means a lot to me ❤️";
+let i = 0;
+function typing(){
+  if(i < msg.length){
+    document.getElementById("typing").innerHTML += msg.charAt(i);
+    i++;
+    setTimeout(typing, 50);
+  }
+}
+typing();
+
+// cat moods
+const catStates = [
+"https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",
+"https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif",
+"https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif"
+];
+
+const noMessages = [
+"Are you sure? 😢",
+"Pookie please... 🥺",
+"I will be sad... 😭",
+"Please don't do this 💔",
+"Last chance 😖"
+];
+
+let count = 0;
+
+noBtn.onclick = () => {
+  document.body.classList.add("shake");
+  setTimeout(()=>document.body.classList.remove("shake"),300);
+
+  if(count < noMessages.length){
+    noBtn.textContent = noMessages[count];
+    catImg.src = catStates[Math.min(count, catStates.length-1)];
+  } else {
+    noBtn.style.display = "none";
+  }
+
+  yesBtn.style.transform = `scale(${1 + count*0.2})`;
+  count++;
+};
+
+// YES
+yesBtn.onclick = () => {
+  document.body.innerHTML = `
+    <div style="text-align:center; margin-top:20%;">
+      <h1 style="color:#e91e63;">I KNEW IT 😍🎉</h1>
+      <img src="https://media.giphy.com/media/l41lH4ADDRgFr886A/giphy.gif" width="250">
+      <p style="font-size:1.5rem;">You made me the happiest person ❤️</p>
+    </div>
+  `;
+  confetti();
+};
+
+// confetti
+function confetti(){
+  for(let i=0;i<100;i++){
+    let el = document.createElement("div");
+    el.innerHTML="🎉";
+    el.style.position="absolute";
+    el.style.left=Math.random()*100+"vw";
+    el.style.top=Math.random()*100+"vh";
+    document.body.appendChild(el);
+  }
+}
+
+// hearts
+setInterval(()=>{
+  let heart = document.createElement("div");
+  heart.className="heart";
+  heart.innerHTML="❤️";
+  heart.style.left=Math.random()*100+"vw";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),6000);
+},300);
+
+// share
+function share(){
+  const url = encodeURIComponent(window.location.href);
+  window.open(`https://wa.me/?text=Open this 💖 ${url}`);
+}
+</script>
+
+</body>
+</html>
